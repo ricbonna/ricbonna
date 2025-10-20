@@ -1,16 +1,16 @@
-## Hi there 👋
+# 👋 Hi, I'm Ricardo!
 
-<!--
-**ricbonna/ricbonna** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+I'm currently studying **Computer Science** at **UniCEUB**.  
+I'm passionate about **software development** and **cybersecurity**.
 
-Here are some ideas to get you started:
+## 💻 Technologies & Tools
+- **Languages:** C/C++, SQL  
+- **Tools:** Git, Linux (NixOS), VS Code, DBeaver  
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## 🌱 What I'm up to
+I'm currently exploring new ways to grow as a developer  
+I enjoy working on personal projects to develop programming skills.
+
+## How to reach me
+- 💼 [LinkedIn](www.linkedin.com/in/ricardo-oliveira-de-rubim-bonna-11299638b)
+- 📧 [ricbonna@gmail.com].
