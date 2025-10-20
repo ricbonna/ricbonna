@@ -12,6 +12,7 @@ I'm currently exploring new ways to grow as a developer
 I enjoy working on personal projects to develop programming skills.
 
 📂 **Portfolio**
+
 The ricbonna repository is meant to showcase my **academic and personal projects**, as well as documentation of my learning and development journey.
 
 ## How to reach me
