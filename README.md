@@ -12,5 +12,5 @@ I'm currently exploring new ways to grow as a developer
 I enjoy working on personal projects to develop programming skills.
 
 ## How to reach me
-- 💼 [LinkedIn](www.linkedin.com/in/ricardo-oliveira-de-rubim-bonna-11299638b)
-- 📧 [ricbonna@gmail.com].
+- 💼 [LinkedIn](https://www.linkedin.com/in/ricardo-oliveira-de-rubim-bonna-11299638b)
+- 📧 [ricbonna@gmail.com](mailto:ricbonna@gmail.com)
