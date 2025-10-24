@@ -86,7 +86,7 @@
     isNormalUser = true;
     description = "ricardo";
     extraGroups = [ "networkmanager" "wheel" ];
-    hashedPassword = "$6$w9LtzLQ25XOYLE1U$SLS0D29D3hY/syZqtmtfpMJrMetqE0aWdwuXtF/puK3xNCMSN3.t5bJVOzXF//kZdDXqwFyed9ZESd75Az8nt/";
+    hashedPassword = "taolhandoasenhapq?";
     packages = with pkgs; [
       kdePackages.kate
     #  thunderbird
