@@ -1,107 +1,115 @@
 package main
 
 import (
-	"database/sql"
-	"encoding/json"
-	"log"
-	"net/http"
-	"strconv"
+    "database/sql"
+    "log"
+    "net/http"
 
-	_ "github.com/go-sql-driver/mysql"
+    "github.com/gin-gonic/gin"
+    _ "github.com/go-sql-driver/mysql"
 )
 
-type Produto struct {
-	CdProduto   int    `json:"cd_produto"`
-	NomeProduto string `json:"nome_produto"`
+type Planta struct {
+    ID             int    `json:"id_planta"`
+    NomeCientifico string `json:"nome_cientifico"`
+    NomePopular    string `json:"nome_popular"`
 }
 
 var db *sql.DB
 
 func main() {
-	var err error
+    var err error
 
-	// adjust to your DB: user:password@tcp(host:port)/dbname
-	db, err = sql.Open("mysql", "root:password@tcp(127.0.0.1:3306)/test")
-	if err != nil {
-		log.Fatal(err)
-	}
+    // Adjust username:password as needed
+    db, err = sql.Open("mysql", "root:root@tcp(localhost:3306)/bd_planta")
+    if err != nil {
+        log.Fatal(err)
+    }
 
-	http.HandleFunc("/produtos", produtosHandler)
-	http.HandleFunc("/produto/", produtoHandler)
+    if err = db.Ping(); err != nil {
+        log.Fatal(err)
+    }
 
-	log.Println("Server running on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
-}
+    r := gin.Default()
 
-// ---- LIST + CREATE ----
-func produtosHandler(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case http.MethodGet:
-		rows, err := db.Query("SELECT Cd_Produto, Nome_Produto FROM Tb_produto")
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			return
-		}
-		defer rows.Close()
+    // CREATE
+    r.POST("/plantas", func(c *gin.Context) {
+        var p Planta
+        if err := c.BindJSON(&p); err != nil {
+            c.JSON(400, gin.H{"error": err.Error()})
+            return
+        }
 
-		var produtos []Produto
-		for rows.Next() {
-			var p Produto
-			rows.Scan(&p.CdProduto, &p.NomeProduto)
-			produtos = append(produtos, p)
-		}
+        result, err := db.Exec(
+            "INSERT INTO PLANTAS (nome_cientifico, nome_popular) VALUES (?, ?)",
+            p.NomeCientifico, p.NomePopular,
+        )
 
-		json.NewEncoder(w).Encode(produtos)
+        if err != nil {
+            c.JSON(500, gin.H{"error": err.Error()})
+            return
+        }
 
-	case http.MethodPost:
-		var p Produto
-		json.NewDecoder(r.Body).Decode(&p)
+        id, _ := result.LastInsertId()
+        p.ID = int(id)
 
-		_, err := db.Exec("INSERT INTO Tb_produto (Nome_Produto) VALUES (?)", p.NomeProduto)
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			return
-		}
+        c.JSON(201, p)
+    })
 
-		w.WriteHeader(201)
-		w.Write([]byte("Produto criado"))
-	}
-}
+    // READ ALL
+    r.GET("/plantas", func(c *gin.Context) {
+        rows, err := db.Query("SELECT id_planta, nome_cientifico, nome_popular FROM PLANTAS")
+        if err != nil {
+            c.JSON(500, gin.H{"error": err.Error()})
+            return
+        }
+        defer rows.Close()
 
-// ---- READ + UPDATE + DELETE ----
-func produtoHandler(w http.ResponseWriter, r *http.Request) {
-	idStr := r.URL.Path[len("/produto/"):]
-	id, _ := strconv.Atoi(idStr)
+        var plantas []Planta
+        for rows.Next() {
+            var p Planta
+            rows.Scan(&p.ID, &p.NomeCientifico, &p.NomePopular)
+            plantas = append(plantas, p)
+        }
 
-	switch r.Method {
+        c.JSON(200, plantas)
+    })
 
-	case http.MethodGet: // READ
-		var p Produto
-		err := db.QueryRow("SELECT Cd_Produto, Nome_Produto FROM Tb_produto WHERE Cd_Produto = ?", id).
-			Scan(&p.CdProduto, &p.NomeProduto)
-		if err != nil {
-			http.Error(w, "Not found", 404)
-			return
-		}
-		json.NewEncoder(w).Encode(p)
+    // UPDATE
+    r.PUT("/plantas/:id", func(c *gin.Context) {
+        id := c.Param("id")
+        var p Planta
 
-	case http.MethodPut: // UPDATE
-		var p Produto
-		json.NewDecoder(r.Body).Decode(&p)
+        if err := c.BindJSON(&p); err != nil {
+            c.JSON(400, gin.H{"error": err.Error()})
+            return
+        }
 
-		_, err := db.Exec("UPDATE Tb_produto SET Nome_Produto=? WHERE Cd_Produto=?", p.NomeProduto, id)
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			return
-		}
-		w.Write([]byte("Produto atualizado"))
+        _, err := db.Exec(
+            "UPDATE PLANTAS SET nome_cientifico=?, nome_popular=? WHERE id_planta=?",
+            p.NomeCientifico, p.nomePopular, id,
+        )
 
-	case http.MethodDelete: // DELETE
-		_, err := db.Exec("DELETE FROM Tb_produto WHERE Cd_Produto=?", id)
-		if err != nil {
-			http.Error(w, err.Error(), 500)
-			return
-		}
-		w.Write([]byte("Produto deletado"))
-	}
+        if err != nil {
+            c.JSON(500, gin.H{"error": err.Error()})
+            return
+        }
+
+        c.JSON(200, gin.H{"updated": id})
+    })
+
+    // DELETE
+    r.DELETE("/plantas/:id", func(c *gin.Context) {
+        id := c.Param("id")
+
+        _, err := db.Exec("DELETE FROM PLANTAS WHERE id_planta=?", id)
+        if err != nil {
+            c.JSON(500, gin.H{"error": err.Error()})
+            return
+        }
+
+        c.Status(204)
+    })
+
+    r.Run(":8080")
 }
