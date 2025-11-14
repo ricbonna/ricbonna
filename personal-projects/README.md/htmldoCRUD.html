@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plantas - CRUD</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+    <h1>🌱 Gerenciador de Plantas</h1>
+</header>
+
+<section class="container">
+
+    <!-- Create Form -->
+    <div class="card form-card">
+        <h2>Cadastrar Planta</h2>
+        <form id="createForm">
+            <input type="text" id="nomeCientifico" placeholder="Nome Científico" required>
+            <input type="text" id="nomePopular" placeholder="Nome Popular" required>
+            <button type="submit">Cadastrar</button>
+        </form>
+    </div>
+
+    <!-- Plant List -->
+    <div class="card list-card">
+        <h2>Lista de Plantas</h2>
+        <div id="plantasList"></div>
+    </div>
+
+</section>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal hidden">
+    <div class="modal-content">
+        <h2>Editar Planta</h2>
+
+        <form id="editForm">
+            <input type="text" id="editNomeCientifico" required>
+            <input type="text" id="editNomePopular" required>
+
+            <button type="submit">Salvar</button>
+            <button type="button" class="cancel" onclick="closeModal()">Cancelar</button>
+        </form>
+    </div>
+</div>
+
+<script> 
+
+const API_URL = "http://localhost:8080/plantas";
+
+let currentEditId = null;
+
+// Load plants on startup
+document.addEventListener("DOMContentLoaded", loadPlantas);
+
+async function loadPlantas() {
+    const res = await fetch(API_URL);
+    const plantas = await res.json();
+
+    const list = document.getElementById("plantasList");
+    list.innerHTML = "";
+
+    plantas.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "plant-item";
+
+        div.innerHTML = `
+            <strong>${p.nome_popular}</strong><br>
+            <em>${p.nome_cientifico}</em>
+
+            <div class="item-buttons">
+                <button class="edit-btn" onclick="openModal(${p.id_planta}, '${p.nome_cientifico}', '${p.nome_popular}')">Editar</button>
+                <button class="delete-btn" onclick="deletePlanta(${p.id_planta})">Excluir</button>
+            </div>
+        `;
+
+        list.appendChild(div);
+    });
+}
+
+// CREATE
+document.getElementById("createForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const planta = {
+        nome_cientifico: document.getElementById("nomeCientifico").value,
+        nome_popular: document.getElementById("nomePopular").value
+    };
+
+    await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(planta)
+    });
+
+    e.target.reset();
+    loadPlantas();
+});
+
+// DELETE
+async function deletePlanta(id) {
+    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    loadPlantas();
+}
+
+// OPEN MODAL
+function openModal(id, nomeC, nomeP) {
+    currentEditId = id;
+
+    document.getElementById("editNomeCientifico").value = nomeC;
+    document.getElementById("editNomePopular").value = nomeP;
+
+    document.getElementById("editModal").classList.remove("hidden");
+}
+
+// CLOSE MODAL
+function closeModal() {
+    document.getElementById("editModal").classList.add("hidden");
+    currentEditId = null;
+}
+
+// UPDATE
+document.getElementById("editForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const updated = {
+        nome_cientifico: document.getElementById("editNomeCientifico").value,
+        nome_popular: document.getElementById("editNomePopular").value
+    };
+
+    await fetch(`${API_URL}/${currentEditId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updated)
+    });
+
+    closeModal();
+    loadPlantas();
+});
+
+</script>
+</body>
+</html>
