@@ -20,7 +20,7 @@ func main() {
 	var err error
 
 	// Adjust username:password as needed
-	db, err = sql.Open("mysql", "app:1234@tcp(localhost:3306)/bd_planta")
+	db, err = sql.Open("mysql", "app:1234@tcp(localhost:8080)/bd_planta")
 	if err != nil {
 		log.Fatal(err)
 	}
