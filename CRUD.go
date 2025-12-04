@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"log"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -20,7 +21,7 @@ func main() {
 	var err error
 
 	// Adjust username:password as needed
-	db, err = sql.Open("mysql", "app:1234@tcp(localhost:8080)/bd_planta")
+	db, err = sql.Open("mysql", "root:ceub123456@tcp(localhost:3306)/bd_planta")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,6 +31,8 @@ func main() {
 	}
 
 	r := gin.Default()
+
+	r.Use(cors.Default())
 
 	// CREATE
 	r.POST("/plantas", func(c *gin.Context) {
@@ -112,4 +115,3 @@ func main() {
 
 	r.Run(":8080")
 }
-
