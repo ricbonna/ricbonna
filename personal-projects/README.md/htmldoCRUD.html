@@ -6,15 +6,29 @@
     <title>Plantas - CRUD</title>
     <link rel="stylesheet" href="style.css" />
 </head>
+<footer>
+    <p>Desenvolvido por Seu Nome</p>
+
+    <div class="footer-buttons">
+        <a href="https://linkedin.com/in/seu-link" target="_blank" class="footer-btn">LinkedIn</a>
+        <a href="https://github.com/ricbonna" target="_blank" class="footer-btn">GitHub</a>
+        <a href="mailto:ricbonna@gmail.com" class="footer-btn">Email</a>
+    </div>
+</footer>
+
 <body>
 
 <header>
     <h1>🌱 Gerenciador de Plantas</h1>
+    <div class="top-buttons">
+        <button id="increaseFontBtn" class="header-btn">Aumentar Fonte</button>
+        <button id="decreaseFontBtn" class="header-btn">Diminuir Fonte</button>
+        <button id="contrastBtn" class="header-btn">Alto Contraste</button>
+    </div>    
 </header>
 
 <section class="container">
 
-    <!-- Create Form -->
     <div class="card form-card">
         <h2>Cadastrar Planta</h2>
         <form id="createForm">
@@ -24,7 +38,6 @@
         </form>
     </div>
 
-    <!-- Plant List -->
     <div class="card list-card">
         <h2>Lista de Plantas</h2>
         <div id="plantasList"></div>
@@ -32,7 +45,6 @@
 
 </section>
 
-<!-- Edit Modal -->
 <div id="editModal" class="modal hidden">
     <div class="modal-content">
         <h2>Editar Planta</h2>
@@ -53,8 +65,33 @@ const API_URL = "http://localhost:8080/plantas";
 
 let currentEditId = null;
 
-// Load plants on startup
 document.addEventListener("DOMContentLoaded", loadPlantas);
+
+// Aumentar fonte
+let fontSize = 16;
+document.getElementById("increaseFontBtn").addEventListener("click", () => {
+    fontSize += 2;
+    document.body.style.fontSize = fontSize + "px";
+});
+// Diminuir fonte
+document.getElementById("decreaseFontBtn").addEventListener("click", () => {
+    if (fontSize > 10) {   // evita fonte ficar minúscula demais
+        fontSize -= 2;
+        document.body.style.fontSize = fontSize + "px";
+    }
+});
+
+// Alto contraste
+let contrastOn = false;
+document.getElementById("contrastBtn").addEventListener("click", () => {
+    contrastOn = !contrastOn;
+
+    if (contrastOn) {
+        document.body.classList.add("high-contrast");
+    } else {
+        document.body.classList.remove("high-contrast");
+    }
+});
 
 async function loadPlantas() {
     const res = await fetch(API_URL);
