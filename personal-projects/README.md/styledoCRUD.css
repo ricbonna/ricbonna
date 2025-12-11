@@ -118,3 +118,115 @@ button:hover {
     background: #888;
     margin-left: 10px;
 }
+
+input {
+    margin-left: -10px;
+}
+
+footer {
+    background: #5b8a62;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 16px;
+    border-radius: 10px;
+}
+
+.footer-buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.footer-btn {
+    background: #6ea876;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.1s;
+}
+
+.footer-btn:hover {
+    background: #4e7b57;
+    transform: scale(0.97);
+}
+
+.top-buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.header-btn {
+    background: #6ea876;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.1s;
+}
+
+.header-btn:hover {
+    background: #4e7b57;
+    transform: scale(0.97);
+}
+
+/* Modo alto contraste */
+.high-contrast {
+    background: rgb(255, 255, 255) !important;
+    color: white !important;
+}
+
+/* Contraste vibrante (verde mais verde / branco mais branco) */
+.high-contrast {
+    background: #ffffff !important;
+    color: #1d3a22 !important;
+}
+
+/* Header e Footer */
+.high-contrast header,
+.high-contrast footer {
+    background: #3f7048 !important; /* verde mais escuro e vibrante */
+    color: #ffffff !important;
+}
+
+/* Cards e containers */
+.high-contrast .card,
+.high-contrast .modal-content {
+    background: #ffffff !important;
+    color: #1d3a22 !important;
+    border: 2px solid #4f8c54 !important;
+}
+
+/* Itens de planta */
+.high-contrast .plant-item {
+    background: #e2ffe9 !important;
+    border-left: 6px solid #3f9f5a !important; /* verde mais intenso */
+}
+
+/* Inputs */
+.high-contrast input {
+    background: #ffffff !important;
+    color: #1d3a22 !important;
+    border: 2px solid #3f9f5a !important;
+}
+
+.high-contrast button:hover,
+.high-contrast .footer-btn:hover,
+.high-contrast .header-btn:hover {
+    background: #2c7a44 !important; /* ainda mais escuro no hover */
+}
+
+/* Links */
+.high-contrast a {
+    color: #2c7a44 !important;
+}
+
